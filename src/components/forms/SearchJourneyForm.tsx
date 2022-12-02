@@ -23,7 +23,7 @@ const debouncedFetchLocations = debounce((query, callback) => {
 
 const SearchJourneyForm = () => {
   const { setParams, resetParams } = useJourneysContext();
-  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [journeyDate, setJourneyDate] = useState<Date | null>(null);
 
   const [selectedOrigin, setSelectedOrigin] = useState<any>(null);
   const [originQuery, setOriginQuery] = useState("");
@@ -55,31 +55,31 @@ const SearchJourneyForm = () => {
     () =>
       Boolean(selectedDestination) &&
       Boolean(selectedOrigin) &&
-      Boolean(startDate),
-    [selectedDestination, selectedOrigin, startDate]
+      Boolean(journeyDate),
+    [selectedDestination, selectedOrigin, journeyDate]
   );
 
   const onSubmit = useCallback(
     (event: FormEvent) => {
       event.preventDefault();
 
-      if (!selectedDestination || !selectedOrigin || !startDate) {
+      if (!selectedDestination || !selectedOrigin || !journeyDate) {
         return;
       }
 
       setParams({
         from: selectedOrigin.id,
         to: selectedDestination.id,
-        departure: startDate,
+        departure: journeyDate,
       });
     },
-    [selectedDestination, selectedOrigin, setParams, startDate]
+    [selectedDestination, selectedOrigin, setParams, journeyDate]
   );
 
   const onClearSearch = useCallback(() => {
     setSelectedDestination(null);
     setSelectedOrigin(null);
-    setStartDate(null);
+    setJourneyDate(null);
     resetParams();
   }, [resetParams]);
 
@@ -119,8 +119,8 @@ const SearchJourneyForm = () => {
           id="datetime"
           name="datetime"
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-          selected={startDate}
-          onChange={(date: Date) => setStartDate(date)}
+          selected={journeyDate}
+          onChange={(date: Date) => setJourneyDate(date)}
           showTimeSelect
           placeholderText="Select date and time"
         />
