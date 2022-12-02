@@ -88,45 +88,48 @@ const SearchJourneyForm = () => {
     <form
       autoComplete="off"
       onSubmit={onSubmit}
-      className="p-4 flex flex-col space-y-4 bg-gray-50 max-w-screen-sm md:max-w-md w-full rounded-md border-2"
+      className="p-4 flex flex-col space-y-6 bg-gray-50 max-w-screen-sm md:max-w-md w-full rounded-md border-2"
     >
-      <SearchAutocompleteInput
-        label="Where is your departure?"
-        items={originResults}
-        selected={selectedOrigin}
-        onQueryChange={setOriginQuery}
-        onItemSelect={(item) => setSelectedOrigin(item)}
-        placeholder="Enter origin (city, address, stops, etc.)"
-      />
-
-      <SearchAutocompleteInput
-        label="Where would you like to go?"
-        items={destinationResults}
-        selected={selectedDestination}
-        onQueryChange={setDestinationQuery}
-        onItemSelect={(item) => setSelectedDestination(item)}
-        placeholder="Enter destination (city, address, stops, etc.)"
-      />
-
-      <div>
-        <label
-          htmlFor="datetime"
-          className="block text-sm font-medium text-gray-700"
-        >
-          When would you like to travel?
-        </label>
-        <DatePicker
-          id="datetime"
-          name="datetime"
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-          selected={journeyDate}
-          onChange={(date: Date) => setJourneyDate(date)}
-          showTimeSelect
-          dateFormat="MM/dd/yyyy - HH:mm"
-          timeFormat="HH:mm"
-          placeholderText="Select date and time for the journey"
+      <fieldset className="flex flex-col space-y-4" disabled={journeysLoading}>
+        <SearchAutocompleteInput
+          label="Where is your departure?"
+          items={originResults}
+          selected={selectedOrigin}
+          onQueryChange={setOriginQuery}
+          onItemSelect={(item) => setSelectedOrigin(item)}
+          placeholder="Enter origin (city, address, stops, etc.)"
         />
-      </div>
+
+        <SearchAutocompleteInput
+          label="Where would you like to go?"
+          items={destinationResults}
+          selected={selectedDestination}
+          onQueryChange={setDestinationQuery}
+          onItemSelect={(item) => setSelectedDestination(item)}
+          placeholder="Enter destination (city, address, stops, etc.)"
+        />
+
+        <div>
+          <label
+            htmlFor="datetime"
+            className="block text-sm font-medium text-gray-700"
+          >
+            When would you like to travel?
+          </label>
+          <DatePicker
+            id="datetime"
+            name="datetime"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+            selected={journeyDate}
+            onChange={(date: Date) => setJourneyDate(date)}
+            showTimeSelect
+            dateFormat="MM/dd/yyyy - HH:mm"
+            timeFormat="HH:mm"
+            placeholderText="Select date and time for the journey"
+            disabled={journeysLoading}
+          />
+        </div>
+      </fieldset>
 
       <div className="flex flex-row justify-end space-x-4">
         <Button
