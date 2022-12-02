@@ -4,6 +4,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 
 import { useJourneysContext } from "../context/JourneysContext";
 import { getCurrencySymbol } from "../helpers/currency";
+import SkeletonBox from "./shared/SkeletonBox";
 
 const JourneyList = () => {
   const {
@@ -13,19 +14,12 @@ const JourneyList = () => {
     getLaterJourneys,
   } = useJourneysContext();
 
-  if (journeysQuery.isLoading && journeysQuery.isFetching) {
-    return (
-      <div className="w-full max-w-screen-sm text-center py-16">
-        Searching for journeys...
-      </div>
-    );
-  }
-
   return (
-    <div className="flex flex-col max-w-screen-sm w-full">
-      {journeysLoading && (
-        <div className="text-center py-16">Searching journeys...</div>
-      )}
+    <div className="flex flex-col max-w-screen-sm space-y-4 w-full">
+      {journeysLoading &&
+        [1, 2, 3].map((item) => (
+          <SkeletonBox key={item} className="w-full h-32" />
+        ))}
 
       {!journeysLoading && !journeysQuery.data && (
         <div className="text-center py-16">
@@ -67,8 +61,9 @@ const JourneyList = () => {
                       ? `${journey.price.amount} ${getCurrencySymbol(
                           journey.price.currency
                         )}`
-                      : ""}
+                      : "Price Unknown"}
                   </h2>
+
                   <div className="flex flex-col space-y-2">
                     {journey.legs.map((journeyLeg) => (
                       <div
@@ -79,18 +74,19 @@ const JourneyList = () => {
                           <h3 className="text-sm">
                             {format(
                               new Date(journeyLeg.departure),
-                              "MM/dd/yyyy - HH:mm aa"
+                              "MM/dd/yyyy - HH:mm"
                             )}
                           </h3>
                           <h3 className="text-lg font-semibold">
                             {journeyLeg.origin.name}
                           </h3>
                         </div>
+
                         <div className="text-right">
                           <h3 className="text-sm">
                             {format(
                               new Date(journeyLeg.arrival),
-                              "MM/dd/yyyy - HH:mm aa"
+                              "MM/dd/yyyy - HH:mm"
                             )}
                           </h3>
                           <h3 className="text-lg font-semibold">

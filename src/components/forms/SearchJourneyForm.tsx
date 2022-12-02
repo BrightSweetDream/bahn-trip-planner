@@ -122,7 +122,8 @@ const SearchJourneyForm = () => {
           selected={journeyDate}
           onChange={(date: Date) => setJourneyDate(date)}
           showTimeSelect
-          dateFormat="Pp"
+          dateFormat="MM/dd/yyyy - HH:mm"
+          timeFormat="HH:mm"
           placeholderText="Select date and time for the journey"
         />
       </div>
