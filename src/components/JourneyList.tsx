@@ -5,20 +5,32 @@ import { useJourneysContext } from "../context/JourneysContext";
 import { getCurrencySymbol } from "../helpers/currency";
 
 const JourneyList = () => {
-  const { journeysQuery } = useJourneysContext();
+  const { journeysQuery, journeysLoading } = useJourneysContext();
 
-  if (!journeysQuery.data) {
+  if (journeysQuery.isLoading && journeysQuery.isFetching) {
     return (
       <div className="w-full max-w-screen-sm text-center py-16">
-        Search for journeys...
+        Searching for journeys...
       </div>
     );
   }
 
   return (
     <div className="flex flex-col space-y-4 max-w-screen-sm w-full">
-      {!journeysQuery.isLoading &&
-        journeysQuery.data?.journeys.map((journey: any, index: number) => (
+      {journeysLoading && (
+        <div className="text-center py-16">Searching journeys...</div>
+      )}
+
+      {!journeysLoading && !journeysQuery.data && (
+        <div className="text-center py-16">
+          Enter your details to see available journeys.
+        </div>
+      )}
+
+      {!journeysLoading &&
+        journeysQuery.data &&
+        journeysQuery.data.journeys.length > 0 &&
+        journeysQuery.data.journeys.map((journey: any, index: number) => (
           <div
             key={`journey-${index}`}
             className="w-full flex flex-col space-y-4 bg-green-300 p-4 rounded-md"
@@ -63,6 +75,12 @@ const JourneyList = () => {
             </div>
           </div>
         ))}
+
+      {!journeysLoading &&
+        journeysQuery.data &&
+        journeysQuery.data.journeys.length === 0 && (
+          <div className="text-center py-16">No journey found.</div>
+        )}
     </div>
   );
 };

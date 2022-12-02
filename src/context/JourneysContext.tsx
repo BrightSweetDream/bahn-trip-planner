@@ -1,5 +1,11 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { createContext, useContext, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 
 import { journeysApi } from "../api";
 
@@ -13,6 +19,8 @@ interface IJourneysContext {
   params: IJourneyParams;
   setParams: (params: IJourneyParams) => void;
   journeysQuery: UseQueryResult<any>;
+  journeysLoading: boolean;
+  resetParams: () => void;
 }
 
 const JourneysContext = createContext<IJourneysContext>({} as IJourneysContext);
@@ -37,8 +45,23 @@ const JourneysContextProvider = ({ children }: JourneysContextProps) => {
     { enabled: Boolean(params.from) && Boolean(params.to) }
   );
 
+  const journeysLoading = useMemo(
+    () => journeysQuery.isLoading && journeysQuery.isFetching,
+    [journeysQuery.isFetching, journeysQuery.isLoading]
+  );
+
+  const resetParams = useCallback(() => setParams(DEFAULT_JOURNEY_PARAMS), []);
+
   return (
-    <JourneysContext.Provider value={{ params, setParams, journeysQuery }}>
+    <JourneysContext.Provider
+      value={{
+        params,
+        setParams,
+        journeysQuery,
+        journeysLoading,
+        resetParams,
+      }}
+    >
       {children}
     </JourneysContext.Provider>
   );
