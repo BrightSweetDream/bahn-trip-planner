@@ -7,18 +7,14 @@ import {
   useState,
 } from "react";
 
+import { IJourneysResponse } from "../@types/api";
+import { IJourneysParams } from "../@types/journey";
 import { journeysApi } from "../api";
 
-interface IJourneyParams {
-  from: string;
-  to: string;
-  [key: string]: string | Date;
-}
-
 interface IJourneysContext {
-  params: IJourneyParams;
-  setParams: (params: IJourneyParams) => void;
-  journeysQuery: UseQueryResult<any>;
+  params: IJourneysParams;
+  setParams: (params: IJourneysParams) => void;
+  journeysQuery: UseQueryResult<IJourneysResponse>;
   journeysLoading: boolean;
   resetParams: () => void;
   getEarlierJourneys: (earlierRef: string) => void;
@@ -39,7 +35,7 @@ const DEFAULT_JOURNEY_PARAMS = {
 };
 
 export const JourneysContextProvider = ({ children }: JourneysContextProps) => {
-  const [params, setParams] = useState<IJourneyParams>(DEFAULT_JOURNEY_PARAMS);
+  const [params, setParams] = useState<IJourneysParams>(DEFAULT_JOURNEY_PARAMS);
 
   const journeysQuery = useQuery(
     ["journeys-query", params],

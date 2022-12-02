@@ -1,7 +1,8 @@
+import { IJourneysResponse } from "../../@types/api";
 import client from "../axios";
 
 const index = (params: Record<string, any>) =>
-  client.get("/journeys", { params });
+  client.get<IJourneysResponse>("/journeys", { params });
 
 const journeys = {
   index,

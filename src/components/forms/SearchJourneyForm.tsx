@@ -12,19 +12,21 @@ import SearchAutocompleteInput from "../shared/SearchAutocompleteInput";
 import { useJourneysContext } from "../../context/JourneysContext";
 import Button from "../shared/Button";
 import useDebounce from "../../hooks/use-debounce";
+import { ILocation } from "../../@types/location";
 
 const SearchJourneyForm = () => {
-  const { setParams, resetParams } = useJourneysContext();
+  const { setParams, resetParams, journeysLoading } = useJourneysContext();
   const [journeyDate, setJourneyDate] = useState<Date | null>(null);
 
-  const [selectedOrigin, setSelectedOrigin] = useState<any>(null);
+  const [selectedOrigin, setSelectedOrigin] = useState<ILocation | null>(null);
   const [originQuery, setOriginQuery] = useState("");
-  const [originResults, setOriginResults] = useState<any[]>([]);
+  const [originResults, setOriginResults] = useState<ILocation[]>([]);
   const debouncedOriginQuery = useDebounce(originQuery);
 
-  const [selectedDestination, setSelectedDestination] = useState<any>(null);
+  const [selectedDestination, setSelectedDestination] =
+    useState<ILocation | null>(null);
   const [destinationQuery, setDestinationQuery] = useState("");
-  const [destinationResults, setDestinationResults] = useState<any[]>([]);
+  const [destinationResults, setDestinationResults] = useState<ILocation[]>([]);
   const debouncedDestinationQuery = useDebounce(destinationQuery);
 
   const fetchLocations = useCallback(async (query: string) => {
@@ -127,14 +129,18 @@ const SearchJourneyForm = () => {
 
       <div className="flex flex-row justify-end space-x-4">
         <Button
-          disabled={!isSearchEnabled}
+          disabled={!isSearchEnabled || journeysLoading}
           onClick={() => onClearSearch()}
           variant="outline"
         >
           Clear Search
         </Button>
 
-        <Button disabled={!isSearchEnabled} type="submit">
+        <Button
+          disabled={!isSearchEnabled || journeysLoading}
+          loading={journeysLoading}
+          type="submit"
+        >
           Search
         </Button>
       </div>

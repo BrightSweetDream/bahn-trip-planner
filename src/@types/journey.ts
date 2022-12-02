@@ -1,12 +1,29 @@
+import { ILocation } from "./location";
+
 export interface IJourneyPrice {
   amount: number;
   currency: string;
 }
 
-export interface IJourneyLeg {}
+export interface IJourneyLeg {
+  tripId: string;
+  departure: string;
+  arrival: string;
+  origin: ILocation;
+  destination: ILocation;
+}
 
 export interface IJourney {
   type: string;
   price: IJourneyPrice;
-  legs: IJourneyLeg;
+  legs: IJourneyLeg[];
+}
+
+export interface IJourneysParams {
+  from: string;
+  to: string;
+  departure?: Date;
+  arrival?: Date;
+  earlierThan?: string;
+  laterThan?: string;
 }

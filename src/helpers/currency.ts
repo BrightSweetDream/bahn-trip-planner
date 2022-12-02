@@ -1,7 +1,7 @@
-type CurrencyCode = "EUR";
-
-export const getCurrencySymbol = (code: CurrencyCode) => {
+export const getCurrencySymbol = (code: string) => {
   switch (code) {
+    case "EUR":
+      return "€";
     default:
       return "€";
   }

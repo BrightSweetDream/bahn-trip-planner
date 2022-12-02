@@ -57,53 +57,51 @@ const JourneyList = () => {
             </div>
 
             <div className="flex flex-col space-y-4">
-              {journeysQuery.data.journeys.map(
-                (journey: any, index: number) => (
-                  <div
-                    key={`journey-${index}`}
-                    className="w-full flex flex-col space-y-4 bg-green-300 p-4 rounded-md"
-                  >
-                    <h2 className="text-xl font-semibold">
-                      {journey.price
-                        ? `${journey.price.amount} ${getCurrencySymbol(
-                            journey.price.currency
-                          )}`
-                        : ""}
-                    </h2>
-                    <div className="flex flex-col space-y-2">
-                      {journey.legs.map((journeyLeg: any) => (
-                        <div
-                          key={journeyLeg.tripId}
-                          className="bg-gray-50 rounded-md p-4 flex flex-row items-center justify-between"
-                        >
-                          <div>
-                            <h3 className="text-sm">
-                              {format(
-                                new Date(journeyLeg.departure),
-                                "MM/dd/yyyy - HH:mm aa"
-                              )}
-                            </h3>
-                            <h3 className="text-lg font-semibold">
-                              {journeyLeg.origin.name}
-                            </h3>
-                          </div>
-                          <div className="text-right">
-                            <h3 className="text-sm">
-                              {format(
-                                new Date(journeyLeg.arrival),
-                                "MM/dd/yyyy - HH:mm aa"
-                              )}
-                            </h3>
-                            <h3 className="text-lg font-semibold">
-                              {journeyLeg.destination.name}
-                            </h3>
-                          </div>
+              {journeysQuery.data.journeys.map((journey, index: number) => (
+                <div
+                  key={`journey-${index}`}
+                  className="w-full flex flex-col space-y-4 bg-green-300 p-4 rounded-md"
+                >
+                  <h2 className="text-xl font-semibold">
+                    {journey.price
+                      ? `${journey.price.amount} ${getCurrencySymbol(
+                          journey.price.currency
+                        )}`
+                      : ""}
+                  </h2>
+                  <div className="flex flex-col space-y-2">
+                    {journey.legs.map((journeyLeg) => (
+                      <div
+                        key={journeyLeg.tripId}
+                        className="bg-gray-50 rounded-md p-4 flex flex-row items-center justify-between"
+                      >
+                        <div>
+                          <h3 className="text-sm">
+                            {format(
+                              new Date(journeyLeg.departure),
+                              "MM/dd/yyyy - HH:mm aa"
+                            )}
+                          </h3>
+                          <h3 className="text-lg font-semibold">
+                            {journeyLeg.origin.name}
+                          </h3>
                         </div>
-                      ))}
-                    </div>
+                        <div className="text-right">
+                          <h3 className="text-sm">
+                            {format(
+                              new Date(journeyLeg.arrival),
+                              "MM/dd/yyyy - HH:mm aa"
+                            )}
+                          </h3>
+                          <h3 className="text-lg font-semibold">
+                            {journeyLeg.destination.name}
+                          </h3>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                )
-              )}
+                </div>
+              ))}
             </div>
           </div>
         )}
