@@ -39,14 +39,14 @@ const JourneyList = () => {
                 }
                 className="flex flex-row space-x-2 hover:underline hover:cursor-pointer"
               >
-                <ChevronLeftIcon className="h-6 w-6" /> <span>Before</span>
+                <ChevronLeftIcon className="h-6 w-6" /> <span>Earlier</span>
               </div>
               <div
                 role="button"
                 onClick={() => getLaterJourneys(journeysQuery.data.laterRef)}
                 className="flex flex-row space-x-2 hover:underline hover:cursor-pointer"
               >
-                <span>After</span> <ChevronRightIcon className="h-6 w-6" />
+                <span>Later</span> <ChevronRightIcon className="h-6 w-6" />
               </div>
             </div>
 
