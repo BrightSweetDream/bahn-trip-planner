@@ -2,13 +2,8 @@ import { Fragment } from "react";
 import { Combobox, Transition } from "@headlessui/react";
 import { CheckIcon } from "@heroicons/react/20/solid";
 
-type AutocompleteItem = {
-  id: string;
-  name: string;
-};
-
 type SearchAutocompleteInputProps = {
-  items: AutocompleteItem[];
+  items: any[];
   selected: any;
   onQueryChange: (query: string) => void;
   onItemSelect: (item: any) => void;
