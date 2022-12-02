@@ -3,6 +3,7 @@ import clsx from "clsx";
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: "primary" | "outline" | "text";
+  loading?: boolean;
 };
 
 const Button = ({
@@ -10,6 +11,7 @@ const Button = ({
   variant = "primary",
   children,
   type = "button",
+  loading = false,
   ...props
 }: ButtonProps) => {
   return (
@@ -23,6 +25,7 @@ const Button = ({
       )}
       {...props}
     >
+      {loading}
       {children}
     </button>
   );
