@@ -11,6 +11,7 @@ import DatePicker from "react-datepicker";
 import { locationsApi } from "../../api";
 import SearchAutocompleteInput from "../shared/SearchAutocompleteInput";
 import { useJourneysContext } from "../../context/JourneysContext";
+import Button from "../shared/Button";
 
 const fetchLocations = async (query: string, callback: any) => {
   const response = await locationsApi.search({ query });
@@ -21,7 +22,7 @@ const debouncedFetchLocations = debounce((query, callback) => {
 }, 500);
 
 const SearchJourneyForm = () => {
-  const { setParams } = useJourneysContext();
+  const { setParams, resetParams } = useJourneysContext();
   const [startDate, setStartDate] = useState<Date | null>(null);
 
   const [selectedOrigin, setSelectedOrigin] = useState<any>(null);
@@ -75,41 +76,38 @@ const SearchJourneyForm = () => {
     [selectedDestination, selectedOrigin, setParams, startDate]
   );
 
+  const onClearSearch = useCallback(() => {
+    setSelectedDestination(null);
+    setSelectedOrigin(null);
+    setStartDate(null);
+    resetParams();
+  }, [resetParams]);
+
   return (
     <form
+      autoComplete="off"
       onSubmit={onSubmit}
       className="p-4 flex flex-col space-y-4 bg-gray-50 max-w-screen-sm md:max-w-md w-full rounded-md border-2"
     >
       <div>
-        <label
-          htmlFor="origin"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Origin
-        </label>
         <SearchAutocompleteInput
+          label="Origin"
           items={originResults}
           selected={selectedOrigin}
           onQueryChange={setOriginQuery}
           onItemSelect={(item) => setSelectedOrigin(item)}
+          placeholder="Enter origin (city, address, stops, etc.)"
         />
-      </div>
 
-      <div>
-        <label
-          htmlFor="destination"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Destination
-        </label>
         <SearchAutocompleteInput
+          label="Destination"
           items={destinationResults}
           selected={selectedDestination}
           onQueryChange={setDestinationQuery}
           onItemSelect={(item) => setSelectedDestination(item)}
+          placeholder="Enter distination (city, address, stops, etc.)"
         />
       </div>
-
       <div>
         <label
           htmlFor="datetime"
@@ -118,21 +116,28 @@ const SearchJourneyForm = () => {
           Date & Time
         </label>
         <DatePicker
+          id="datetime"
+          name="datetime"
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
           selected={startDate}
           onChange={(date: Date) => setStartDate(date)}
           showTimeSelect
+          placeholderText="Select date and time"
         />
       </div>
 
-      <div className="text-right">
-        <button
+      <div className="flex flex-row justify-end space-x-4">
+        <Button
           disabled={!isSearchEnabled}
-          type="submit"
-          className="inline-flex justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50"
+          onClick={() => onClearSearch()}
+          variant="outline"
         >
+          Clear Search
+        </Button>
+
+        <Button disabled={!isSearchEnabled} type="submit">
           Search
-        </button>
+        </Button>
       </div>
     </form>
   );
