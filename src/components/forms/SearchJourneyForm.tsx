@@ -5,21 +5,13 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import debounce from "lodash.debounce";
 import DatePicker from "react-datepicker";
 
 import { locationsApi } from "../../api";
 import SearchAutocompleteInput from "../shared/SearchAutocompleteInput";
 import { useJourneysContext } from "../../context/JourneysContext";
 import Button from "../shared/Button";
-
-const fetchLocations = async (query: string, callback: any) => {
-  const response = await locationsApi.search({ query });
-  callback(response.data);
-};
-const debouncedFetchLocations = debounce((query, callback) => {
-  fetchLocations(query, callback);
-}, 500);
+import useDebounce from "../../hooks/use-debounce";
 
 const SearchJourneyForm = () => {
   const { setParams, resetParams } = useJourneysContext();
@@ -28,28 +20,35 @@ const SearchJourneyForm = () => {
   const [selectedOrigin, setSelectedOrigin] = useState<any>(null);
   const [originQuery, setOriginQuery] = useState("");
   const [originResults, setOriginResults] = useState<any[]>([]);
+  const debouncedOriginQuery = useDebounce(originQuery);
 
   const [selectedDestination, setSelectedDestination] = useState<any>(null);
   const [destinationQuery, setDestinationQuery] = useState("");
   const [destinationResults, setDestinationResults] = useState<any[]>([]);
+  const debouncedDestinationQuery = useDebounce(destinationQuery);
+
+  const fetchLocations = useCallback(async (query: string) => {
+    const response = await locationsApi.search({ query });
+    return response.data;
+  }, []);
 
   useEffect(() => {
-    if (destinationQuery) {
-      debouncedFetchLocations(destinationQuery, (res: any) => {
-        setDestinationResults(res);
-      });
-    } else {
-      setDestinationResults([]);
-    }
-
-    if (originQuery) {
-      debouncedFetchLocations(originQuery, (res: any) => {
-        setOriginResults(res);
-      });
+    if (debouncedOriginQuery) {
+      fetchLocations(debouncedOriginQuery).then((data) =>
+        setOriginResults(data)
+      );
     } else {
       setOriginResults([]);
     }
-  }, [destinationQuery, originQuery]);
+
+    if (debouncedDestinationQuery) {
+      fetchLocations(debouncedDestinationQuery).then((data) =>
+        setDestinationResults(data)
+      );
+    } else {
+      setDestinationResults([]);
+    }
+  }, [debouncedDestinationQuery, debouncedOriginQuery, fetchLocations]);
 
   const isSearchEnabled = useMemo(
     () =>
@@ -89,31 +88,30 @@ const SearchJourneyForm = () => {
       onSubmit={onSubmit}
       className="p-4 flex flex-col space-y-4 bg-gray-50 max-w-screen-sm md:max-w-md w-full rounded-md border-2"
     >
-      <div>
-        <SearchAutocompleteInput
-          label="Origin"
-          items={originResults}
-          selected={selectedOrigin}
-          onQueryChange={setOriginQuery}
-          onItemSelect={(item) => setSelectedOrigin(item)}
-          placeholder="Enter origin (city, address, stops, etc.)"
-        />
+      <SearchAutocompleteInput
+        label="Where is your departure?"
+        items={originResults}
+        selected={selectedOrigin}
+        onQueryChange={setOriginQuery}
+        onItemSelect={(item) => setSelectedOrigin(item)}
+        placeholder="Enter origin (city, address, stops, etc.)"
+      />
 
-        <SearchAutocompleteInput
-          label="Destination"
-          items={destinationResults}
-          selected={selectedDestination}
-          onQueryChange={setDestinationQuery}
-          onItemSelect={(item) => setSelectedDestination(item)}
-          placeholder="Enter distination (city, address, stops, etc.)"
-        />
-      </div>
+      <SearchAutocompleteInput
+        label="Where would you like to go?"
+        items={destinationResults}
+        selected={selectedDestination}
+        onQueryChange={setDestinationQuery}
+        onItemSelect={(item) => setSelectedDestination(item)}
+        placeholder="Enter destination (city, address, stops, etc.)"
+      />
+
       <div>
         <label
           htmlFor="datetime"
           className="block text-sm font-medium text-gray-700"
         >
-          Date & Time
+          When would you like to travel?
         </label>
         <DatePicker
           id="datetime"
@@ -122,7 +120,8 @@ const SearchJourneyForm = () => {
           selected={journeyDate}
           onChange={(date: Date) => setJourneyDate(date)}
           showTimeSelect
-          placeholderText="Select date and time"
+          dateFormat="Pp"
+          placeholderText="Select date and time for the journey"
         />
       </div>
 
