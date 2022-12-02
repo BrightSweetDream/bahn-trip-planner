@@ -21,6 +21,8 @@ interface IJourneysContext {
   journeysQuery: UseQueryResult<any>;
   journeysLoading: boolean;
   resetParams: () => void;
+  getEarlierJourneys: (earlierRef: string) => void;
+  getLaterJourneys: (laterRef: string) => void;
 }
 
 const JourneysContext = createContext<IJourneysContext>({} as IJourneysContext);
@@ -36,7 +38,7 @@ const DEFAULT_JOURNEY_PARAMS = {
   to: "",
 };
 
-const JourneysContextProvider = ({ children }: JourneysContextProps) => {
+export const JourneysContextProvider = ({ children }: JourneysContextProps) => {
   const [params, setParams] = useState<IJourneyParams>(DEFAULT_JOURNEY_PARAMS);
 
   const journeysQuery = useQuery(
@@ -52,6 +54,20 @@ const JourneysContextProvider = ({ children }: JourneysContextProps) => {
 
   const resetParams = useCallback(() => setParams(DEFAULT_JOURNEY_PARAMS), []);
 
+  const getEarlierJourneys = useCallback(
+    (earlierRef: string) => {
+      setParams({ from: params.from, to: params.to, earlierThan: earlierRef });
+    },
+    [params.from, params.to]
+  );
+
+  const getLaterJourneys = useCallback(
+    (laterRef: string) => {
+      setParams({ from: params.from, to: params.to, laterThan: laterRef });
+    },
+    [params.from, params.to]
+  );
+
   return (
     <JourneysContext.Provider
       value={{
@@ -60,11 +76,11 @@ const JourneysContextProvider = ({ children }: JourneysContextProps) => {
         journeysQuery,
         journeysLoading,
         resetParams,
+        getEarlierJourneys,
+        getLaterJourneys,
       }}
     >
       {children}
     </JourneysContext.Provider>
   );
 };
-
-export default JourneysContextProvider;
