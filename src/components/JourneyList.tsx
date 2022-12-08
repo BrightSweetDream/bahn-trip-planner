@@ -7,13 +7,15 @@ import { getCurrencySymbol } from "../helpers/currency";
 
 const JourneyList = () => {
   const {
+    showBtn,
     journeysQuery,
     journeysLoading,
     getEarlierJourneys,
     getLaterJourneys,
+    getOriginJourney,
   } = useJourneysContext();
 
-  console.log("Journey List", journeysQuery.data?.journeys);
+  //console.log("Journey List", journeysQuery.data?.journeys);
 
   return (
     <div className="flex flex-col space-y-4 w-full pt-6">
@@ -32,6 +34,16 @@ const JourneyList = () => {
                 <ChevronLeftIcon className="h-6 w-6" /> <span>Earlier</span>
               </div>
 
+              {
+                <div
+                  role="button"
+                  onClick={() => getOriginJourney()}
+                  className="flex flex-row space-x-2 hover:underline hover:cursor-pointer"
+                  id="Origin"
+                >
+                  <span>{showBtn ? "Origin Search" : ""}</span>
+                </div>
+              }
               <div
                 role="button"
                 onClick={() => getLaterJourneys(journeysQuery.data.laterRef)}
@@ -100,15 +112,22 @@ const JourneyList = () => {
                                         journeyLeg.departure
                                       ).getTime()) /
                                       3600000
-                                  )}h `
-                                : ""}
-                              {Math.ceil(
-                                ((new Date(journeyLeg.arrival).getTime() -
-                                  new Date(journeyLeg.departure).getTime()) %
-                                  3600000) /
-                                  60000
-                              )}
-                              m
+                                  )}h ${Math.ceil(
+                                    ((new Date(journeyLeg.arrival).getTime() -
+                                      new Date(
+                                        journeyLeg.departure
+                                      ).getTime()) %
+                                      3600000) /
+                                      60000
+                                  )}m`
+                                : `${Math.ceil(
+                                    ((new Date(journeyLeg.arrival).getTime() -
+                                      new Date(
+                                        journeyLeg.departure
+                                      ).getTime()) %
+                                      3600000) /
+                                      60000
+                                  )}min`}
                             </div>
                           </div>
                           <div className="flex flex-col justify-center items-center">
@@ -118,7 +137,7 @@ const JourneyList = () => {
                                 "MM/dd/yyyy - HH:mm"
                               )}
                             </h3>
-                            <h3 className="text-lg font-semibold">
+                            <h3 className="text-lg text-center font-semibold">
                               {journeyLeg.destination.name}
                             </h3>
                           </div>

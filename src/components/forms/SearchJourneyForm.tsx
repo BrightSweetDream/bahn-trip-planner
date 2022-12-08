@@ -15,7 +15,7 @@ import useDebounce from "../../hooks/use-debounce";
 import { ILocation } from "../../@types/location";
 
 const SearchJourneyForm = () => {
-  const { setParams, resetParams, journeysLoading, journeysQuery } =
+  const { setParams, setShowBtn, journeysLoading, journeysQuery } =
     useJourneysContext();
   const [journeyDate, setJourneyDate] = useState<Date | null>(null);
 
@@ -74,16 +74,11 @@ const SearchJourneyForm = () => {
         to: selectedDestination.id,
         departure: journeyDate,
       });
+
+      setShowBtn(0);
     },
     [selectedDestination, selectedOrigin, setParams, journeyDate]
   );
-
-  const onClearSearch = useCallback(() => {
-    setSelectedDestination(null);
-    setSelectedOrigin(null);
-    setJourneyDate(null);
-    resetParams();
-  }, [resetParams]);
 
   return (
     <form
@@ -94,7 +89,7 @@ const SearchJourneyForm = () => {
       <div className="text-center text-2xl">Trip Planner</div>
 
       <fieldset className="flex flex-col space-y-4" disabled={journeysLoading}>
-        <div className="flex flex-row justify-around">
+        <div className="flex flex-row justify-between">
           <div className="mt-1 basis-1/4">
             <label
               htmlFor="datetime"
