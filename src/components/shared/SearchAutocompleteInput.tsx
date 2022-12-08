@@ -26,14 +26,14 @@ const SearchAutocompleteInput = ({
 }: SearchAutocompleteInputProps) => {
   return (
     <Combobox value={selected} onChange={onItemSelect}>
-      <div className="relative mt-1">
+      <div className="relative mt-1 basis-1/4">
         {label && (
           <Combobox.Label className="block text-sm font-medium text-gray-700">
             {label}
           </Combobox.Label>
         )}
         <Combobox.Input
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
           displayValue={(person: any) => person?.name}
           onChange={(event) => onQueryChange(event.target.value)}
           placeholder={placeholder}
@@ -56,7 +56,7 @@ const SearchAutocompleteInput = ({
                   key={item.id}
                   className={({ active }) =>
                     `relative cursor-default select-none py-2 px-4 ${
-                      active ? "bg-green-500 text-white" : "text-gray-900"
+                      active ? "bg-blue-500 text-white" : "text-gray-900"
                     }`
                   }
                   value={item}
@@ -74,7 +74,7 @@ const SearchAutocompleteInput = ({
                       {selected ? (
                         <span
                           className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                            active ? "text-white" : "text-green-500"
+                            active ? "text-white" : "text-blue-500"
                           }`}
                         >
                           <CheckIcon className="h-5 w-5" aria-hidden="true" />

@@ -1,7 +1,7 @@
 import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-import JourneysContextProvider from "./context/JourneysContext";
+import { JourneysContextProvider } from "./context/JourneysContext";
 import Main from "./Main";
 
 const queryClient = new QueryClient({

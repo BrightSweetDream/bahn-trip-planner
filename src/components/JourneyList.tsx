@@ -4,7 +4,6 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 
 import { useJourneysContext } from "../context/JourneysContext";
 import { getCurrencySymbol } from "../helpers/currency";
-import SkeletonBox from "./shared/SkeletonBox";
 
 const JourneyList = () => {
   const {
@@ -14,19 +13,10 @@ const JourneyList = () => {
     getLaterJourneys,
   } = useJourneysContext();
 
+  console.log("Journey List", journeysQuery.data?.journeys);
+
   return (
-    <div className="flex flex-col max-w-screen-sm space-y-4 w-full">
-      {journeysLoading &&
-        [1, 2, 3].map((item) => (
-          <SkeletonBox key={item} className="w-full h-32" />
-        ))}
-
-      {!journeysLoading && !journeysQuery.data && (
-        <div className="text-center py-16">
-          Enter your details to see available journeys.
-        </div>
-      )}
-
+    <div className="flex flex-col space-y-4 w-full pt-6">
       {!journeysLoading &&
         journeysQuery.data &&
         journeysQuery.data.journeys.length > 0 && (
@@ -41,6 +31,7 @@ const JourneyList = () => {
               >
                 <ChevronLeftIcon className="h-6 w-6" /> <span>Earlier</span>
               </div>
+
               <div
                 role="button"
                 onClick={() => getLaterJourneys(journeysQuery.data.laterRef)}
@@ -52,9 +43,78 @@ const JourneyList = () => {
 
             <div className="flex flex-col space-y-4">
               {journeysQuery.data.journeys.map((journey, index: number) => (
+                <details
+                  key={`journey-${index}`}
+                  className="w-full flex flex-col space-y-4 bg-blue-300 p-4 rounded-md shadow"
+                >
+                  <summary className="text-xl font-semibold cursor-pointer">
+                    {journey.price
+                      ? `${journey.price.amount} ${getCurrencySymbol(
+                          journey.price.currency
+                        )}`
+                      : "Price Unknown"}
+                  </summary>
+
+                  <div className="flex flex-col space-y-2">
+                    {journey.legs.map((journeyLeg) => (
+                      <div
+                        key={journeyLeg.tripId}
+                        className="bg-gray-50 rounded-md"
+                      >
+                        <div className="bg-gray-50 rounded-md p-4 grid grid-cols-3 gap-4 items-center">
+                          <div className="pr-3 flex justify-center">
+                            <h3 className="text-sm">
+                              {format(
+                                new Date(journeyLeg.departure),
+                                "MM/dd/yyyy - HH:mm"
+                              )}
+                            </h3>
+                            <h3 className="text-lg font-semibold">
+                              {journeyLeg.origin.name}
+                            </h3>
+                          </div>
+                          <div className="flex justify-center items-center w-full">
+                            <hr className="my-8 w-64 h-1 bg-gray-200 rounded border-0 dark:bg-gray-700" />
+                            <div className="absolute bg-white -translate-x-1/5 dark:bg-gray-900 text-xl">
+                              {Math.floor(
+                                (new Date(journeyLeg.arrival).getTime() -
+                                  new Date(journeyLeg.departure).getTime()) /
+                                  3600000
+                              )}{" "}
+                              h{" "}
+                              {Math.ceil(
+                                ((new Date(journeyLeg.arrival).getTime() -
+                                  new Date(journeyLeg.departure).getTime()) %
+                                  3600000) /
+                                  60000
+                              )}
+                              m
+                            </div>
+                          </div>
+                          <div className="flex justify-center pl-3">
+                            <h3 className="text-sm">
+                              {format(
+                                new Date(journeyLeg.arrival),
+                                "MM/dd/yyyy - HH:mm"
+                              )}
+                            </h3>
+                            <h3 className="text-lg font-semibold">
+                              {journeyLeg.destination.name}
+                            </h3>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </details>
+              ))}
+            </div>
+
+            <div className="flex flex-col space-y-4">
+              {journeysQuery.data.journeys.map((journey, index: number) => (
                 <div
                   key={`journey-${index}`}
-                  className="w-full flex flex-col space-y-4 bg-green-300 p-4 rounded-md"
+                  className="w-full flex flex-col space-y-4 bg-blue-300 p-4 rounded-md"
                 >
                   <h2 className="text-xl font-semibold">
                     {journey.price

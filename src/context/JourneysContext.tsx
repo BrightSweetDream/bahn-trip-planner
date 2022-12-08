@@ -43,6 +43,8 @@ export const JourneysContextProvider = ({ children }: JourneysContextProps) => {
     { enabled: Boolean(params.from) && Boolean(params.to) }
   );
 
+  console.log(journeysQuery.data);
+
   const journeysLoading = useMemo(
     () => journeysQuery.isLoading && journeysQuery.isFetching,
     [journeysQuery.isFetching, journeysQuery.isLoading]
