@@ -11,6 +11,8 @@ export interface IJourneyLeg {
   arrival: string;
   origin: ILocation;
   destination: ILocation;
+  departurePlatform: string;
+  arrivalPlatform: string;
 }
 
 export interface IJourney {

@@ -45,43 +45,63 @@ const JourneyList = () => {
               {journeysQuery.data.journeys.map((journey, index: number) => (
                 <details
                   key={`journey-${index}`}
-                  className="w-full flex flex-col space-y-4 bg-blue-300 p-4 rounded-md shadow"
+                  className="w-full flex flex-col space-y-4 bg-white p-4 rounded-md shadow"
                 >
-                  <summary className="text-xl font-semibold cursor-pointer">
-                    {journey.price
-                      ? `${journey.price.amount} ${getCurrencySymbol(
-                          journey.price.currency
-                        )}`
-                      : "Price Unknown"}
+                  <summary className="text-lg cursor-pointer">
+                    {format(
+                      new Date(journey.legs[0].departure),
+                      "MM/dd/yyyy - HH:mm"
+                    )}{" "}
+                    -{" "}
+                    {format(
+                      new Date(journey.legs[journey.legs.length - 1].arrival),
+                      "MM/dd/yyyy - HH:mm"
+                    )}
+                    <div>
+                      {journey.legs.length} Stops,&nbsp; Price:{" "}
+                      {journey.price
+                        ? `${journey.price.amount} ${getCurrencySymbol(
+                            journey.price.currency
+                          )}`
+                        : "Unknown"}
+                    </div>
                   </summary>
 
                   <div className="flex flex-col space-y-2">
                     {journey.legs.map((journeyLeg) => (
-                      <div
-                        key={journeyLeg.tripId}
-                        className="bg-gray-50 rounded-md"
-                      >
-                        <div className="bg-gray-50 rounded-md p-4 grid grid-cols-3 gap-4 items-center">
-                          <div className="pr-3 flex justify-center">
-                            <h3 className="text-sm">
+                      <div key={journeyLeg.tripId} className="rounded-md">
+                        <div className="bg-white p-4 border-t-2 grid grid-cols-3 gap-4 justify-center">
+                          <div className="flex flex-col justify-center items-center">
+                            <h3 className="text-md">
                               {format(
                                 new Date(journeyLeg.departure),
                                 "MM/dd/yyyy - HH:mm"
                               )}
                             </h3>
                             <h3 className="text-lg font-semibold">
-                              {journeyLeg.origin.name}
+                              {journeyLeg.origin.name}&nbsp;
                             </h3>
                           </div>
                           <div className="flex justify-center items-center w-full">
-                            <hr className="my-8 w-64 h-1 bg-gray-200 rounded border-0 dark:bg-gray-700" />
+                            <hr className="my-8 w-64 h-1 bg-gray-300 rounded border-0 dark:bg-gray-700" />
+                            <div className="flex flex-col">
+                              <hr className="translate-y-1.5 -rotate-45 w-4 h-1 bg-gray-300 rounded border-0 dark:bg-gray-700" />
+                              <hr className="-translate-y-1.5 rotate-45 w-4 h-1 bg-gray-300 rounded border-0 dark:bg-gray-700" />
+                            </div>
                             <div className="absolute bg-white -translate-x-1/5 dark:bg-gray-900 text-xl">
                               {Math.floor(
                                 (new Date(journeyLeg.arrival).getTime() -
                                   new Date(journeyLeg.departure).getTime()) /
                                   3600000
-                              )}{" "}
-                              h{" "}
+                              )
+                                ? `${Math.floor(
+                                    (new Date(journeyLeg.arrival).getTime() -
+                                      new Date(
+                                        journeyLeg.departure
+                                      ).getTime()) /
+                                      3600000
+                                  )}h `
+                                : ""}
                               {Math.ceil(
                                 ((new Date(journeyLeg.arrival).getTime() -
                                   new Date(journeyLeg.departure).getTime()) %
@@ -91,8 +111,8 @@ const JourneyList = () => {
                               m
                             </div>
                           </div>
-                          <div className="flex justify-center pl-3">
-                            <h3 className="text-sm">
+                          <div className="flex flex-col justify-center items-center">
+                            <h3 className="text-md">
                               {format(
                                 new Date(journeyLeg.arrival),
                                 "MM/dd/yyyy - HH:mm"
@@ -107,56 +127,6 @@ const JourneyList = () => {
                     ))}
                   </div>
                 </details>
-              ))}
-            </div>
-
-            <div className="flex flex-col space-y-4">
-              {journeysQuery.data.journeys.map((journey, index: number) => (
-                <div
-                  key={`journey-${index}`}
-                  className="w-full flex flex-col space-y-4 bg-blue-300 p-4 rounded-md"
-                >
-                  <h2 className="text-xl font-semibold">
-                    {journey.price
-                      ? `${journey.price.amount} ${getCurrencySymbol(
-                          journey.price.currency
-                        )}`
-                      : "Price Unknown"}
-                  </h2>
-
-                  <div className="flex flex-col space-y-2">
-                    {journey.legs.map((journeyLeg) => (
-                      <div
-                        key={journeyLeg.tripId}
-                        className="bg-gray-50 rounded-md p-4 flex flex-row items-center justify-between"
-                      >
-                        <div>
-                          <h3 className="text-sm">
-                            {format(
-                              new Date(journeyLeg.departure),
-                              "MM/dd/yyyy - HH:mm"
-                            )}
-                          </h3>
-                          <h3 className="text-lg font-semibold">
-                            {journeyLeg.origin.name}
-                          </h3>
-                        </div>
-
-                        <div className="text-right">
-                          <h3 className="text-sm">
-                            {format(
-                              new Date(journeyLeg.arrival),
-                              "MM/dd/yyyy - HH:mm"
-                            )}
-                          </h3>
-                          <h3 className="text-lg font-semibold">
-                            {journeyLeg.destination.name}
-                          </h3>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
               ))}
             </div>
           </div>
